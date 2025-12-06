@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>The Lions Den — Gallery</title>
+        <link rel="stylesheet" href="Style/styles.css">
+        <link rel="stylesheet" href="Style/Gallery.css">
+        <meta Name="description" content="The Lions Den portfolio gallery of Zach Haugen"> 
+        <meta Name="author" content="Zach Haugen">
+    </head>
+    <body>
+        <header class="site-header">
+            <div class="container" style="display:flex;align-items:center;justify-content:space-between;">
+                <div class="site-brand">
+                    <h1>The Lions Den</h1>
+                    <p>Portfolio of Zach Haugen</p>
+                </div>
+
+                <nav class="site-nav" aria-label="Main navigation">
+                    <ul class="nav-list">
+                        <li><a class="btn" href="index.html">Home</a></li>
+                        <li><a class="btn" href="Broadcasting.html">Broadcasting</a></li>
+                        <li><a class="btn" href="Gallery.html">Gallery</a></li>
+                        <li><a class="btn" href="My_Story.html">My Story</a></li>
+                    </ul>
+                </nav>
+
+                <!-- Part 1: Social Media Buttons in Header -->
+                <div class="social-buttons-header">
+                    <!-- Twitter/X Follow Button -->
+                    <a href="https://twitter.com/intent/follow?screen_name=TheLionsDen" target="_blank" class="social-btn twitter" title="Follow on Twitter/X">Follow on X</a>
+                    <!-- Instagram Follow Button -->
+                    <a href="https://www.instagram.com/thelionsden/" target="_blank" class="social-btn instagram" title="Follow on Instagram">Follow Instagram</a>
+                    <!-- YouTube Subscribe Link -->
+                    <a href="https://www.youtube.com/@TheLionsDen42069" target="_blank" class="social-btn youtube" title="Subscribe on YouTube">Subscribe</a>
+                </div>
+        </header>
+
+        <main class="container">
+            <p class="gallery-intro">Below is a selection of design work (book covers, business cards, menus). Click an image to view full size.</p>
+
+            <section class="gallery-grid" aria-label="Image gallery">
+                <!-- Use a small transparent SVG as placeholder src; actual file loaded via data-src by IntersectionObserver -->
+                <figure class="gallery-item">
+                    <img loading="lazy" data-src="images/Editing and Design Portfolio/LION_Bookcover.png" src="data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='600' height='400'%3E%3Crect width='100%25' height='100%25' fill='%23e8e8e8' /%3E%3C/svg%3E" alt="Book Cover" data-full="images/Editing and Design Portfolio/LION_Bookcover.png" srcset="images/Editing and Design Portfolio/LION_Bookcover.png 600w, images/Editing and Design Portfolio/LION_Bookcover.png 1200w" sizes="(max-width:600px) 100vw, 50vw">
+                    <figcaption class="gallery-caption">Book Cover</figcaption>
+                </figure>
+
+                <figure class="gallery-item">
+                    <img loading="lazy" data-src="images/Editing and Design Portfolio/Noble_Ljon_Business _Card_Front.png" src="data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='250'%3E%3Crect width='100%25' height='100%25' fill='%23e8e8e8' /%3E%3C/svg%3E" alt="Business Card" data-full="images/Editing and Design Portfolio/Noble_Ljon_Business _Card_Front.png">
+                    <figcaption class="gallery-caption">Business Card</figcaption>
+                </figure>
+
+                <figure class="gallery-item">
+                    <img loading="lazy" data-src="images/Editing and Design Portfolio/Golf_DIgest_Magazine_Cover.png" src="data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='600' height='400'%3E%3Crect width='100%25' height='100%25' fill='%23e8e8e8' /%3E%3C/svg%3E" alt="Magazine Cover" data-full="images/Editing and Design Portfolio/Golf_DIgest_Magazine_Cover.png">
+                    <figcaption class="gallery-caption">Magazine Cover</figcaption>
+                </figure>
+
+                <figure class="gallery-item">
+                    <img loading="lazy" data-src="images/Editing and Design Portfolio/Thirsty_Lion_Menu.png" src="data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='600' height='400'%3E%3Crect width='100%25' height='100%25' fill='%23e8e8e8' /%3E%3C/svg%3E" alt="Menu Design" data-full="images/Editing and Design Portfolio/Thirsty_Lion_Menu.png">
+                    <figcaption class="gallery-caption">Menu Design</figcaption>
+                </figure>
+            </section>
+
+            <!-- Lightbox markup (hidden initially) -->
+            <div id="lightbox" class="lb-backdrop" tabindex="-1" aria-hidden="true">
+                <button id="lbClose" class="lb-close" aria-label="Close">Close</button>
+                <img id="lbImage" class="lb-image" src="" alt="Expanded image">
+            </div>
+        </main>
+
+        <script>
+            // IntersectionObserver lazy-loading (bonus) — falls back to native if IO unavailable
+            (function(){
+                const imgs = document.querySelectorAll('img[data-src]');
+                const loadImg = (img) => {
+                    img.src = img.getAttribute('data-src');
+                    if(img.getAttribute('srcset')) img.setAttribute('srcset', img.getAttribute('srcset'));
+                    img.removeAttribute('data-src');
+                };
+
+                if('IntersectionObserver' in window){
+                    const io = new IntersectionObserver((entries, obs) => {
+                        entries.forEach(entry => {
+                            if(entry.isIntersecting){
+                                loadImg(entry.target);
+                                obs.unobserve(entry.target);
+                            }
+                        });
+                    },{rootMargin:'100px'});
+                    imgs.forEach(i=> io.observe(i));
+                } else {
+                    // No IO: load all images (native loading=lazy will still help)
+                    imgs.forEach(loadImg);
+                }
+            })();
+
+            // Simple lightbox
+            (function(){
+                const lightbox = document.getElementById('lightbox');
+                const lbImage = document.getElementById('lbImage');
+                const lbClose = document.getElementById('lbClose');
+
+                document.querySelectorAll('.gallery-item img').forEach(img => {
+                    img.style.cursor = 'zoom-in';
+                    img.addEventListener('click', (e) => {
+                        const full = img.getAttribute('data-full') || img.src;
+                        lbImage.src = full;
+                        lightbox.classList.add('show');
+                        lightbox.setAttribute('aria-hidden','false');
+                        lbClose.focus();
+                    });
+                });
+
+                const closeLB = () => { lightbox.classList.remove('show'); lightbox.setAttribute('aria-hidden','true'); lbImage.src = ''; };
+                lbClose.addEventListener('click', closeLB);
+                lightbox.addEventListener('click', (e)=> { if(e.target === lightbox) closeLB(); });
+                document.addEventListener('keydown', (e)=> { if(e.key === 'Escape') closeLB(); });
+            })();
+        </script>
+    </body>
+</html>
